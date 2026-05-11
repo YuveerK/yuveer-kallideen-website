@@ -5,17 +5,14 @@ export default function CustomCursor() {
   const [pos, setPos]           = useState({ x: -100, y: -100 })
   const [isHovering, setIsHovering] = useState(false)
   const [visible, setVisible]   = useState(false)
-  const [isTouch, setIsTouch]   = useState(false)
+  const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches)
 
   useEffect(() => {
-    if (window.matchMedia('(pointer: coarse)').matches) {
-      setIsTouch(true)
-      return
-    }
+    if (isTouch) return
 
     const onMove = (e) => {
       setPos({ x: e.clientX, y: e.clientY })
-      if (!visible) setVisible(true)
+      setVisible(true)
     }
 
     const onOver = (e) => {
@@ -34,7 +31,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseover', onOver)
       document.removeEventListener('mouseout',  onOut)
     }
-  }, [visible])
+  }, [isTouch])
 
   if (isTouch) return null
 
